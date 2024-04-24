@@ -26,6 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: npm i --force
     # Display progress messages
     - name: Build Progress
       run: |
@@ -36,6 +37,4 @@ jobs:
           npm run build
           # sleep 1 # Optional: If you want to add a delay between each percentage update
         done
-    - run: npm ci
-    - run: npm run build --if-present
     - run: npm test
