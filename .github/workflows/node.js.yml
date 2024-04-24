@@ -33,7 +33,7 @@ jobs:
           echo "$i% complete"
           # Add your build commands here
           # For example:
-          # npm run build
+          npm run build
           # sleep 1 # Optional: If you want to add a delay between each percentage update
         done
     - run: npm ci
