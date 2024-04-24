@@ -6,36 +6,24 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    runs-on: ubuntu-latest  # Replace with your desired runner OS
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm i 
-    # Start a background process to monitor build progress
-    - name: Monitor Build Progress
-      run: |
-        npm run build | while IFS= read -r line; do
-          if [[ $line =~ [0-9]+% ]]; then
-            echo "Build Progress: $line"
-          fi
-        done &
+      - uses: actions/checkout@v3  # Checkout your code from the repository
 
-    # Execute the build command
-    - run: npm run build
+      # Build your project
+      - name: Run Build Script
+        run: npm run build
 
-    # Show a message indicating build completion
-    - name: Build Complete
-      run: echo "Build process completed successfully!"
+  # Monitor build progress (run concurrently with build)
+  monitor:
+    runs-on: ubuntu-latest  # Replace with your desired runner OS (can be the same)
+    steps:
+      - uses: actions/checkout@v3  # Checkout your code from the repository
+      - name: Monitor Build Logs
+        run: |  # Multi-line command using a heredoc
+          tail -f <path/to/build/logs>  # Replace with your build log file path
+          # Optionally, add other commands to analyze or format the logs
+        # This step runs continuously, showing build progress in real-time
