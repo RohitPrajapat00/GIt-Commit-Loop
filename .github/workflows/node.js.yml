@@ -27,14 +27,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i --force
-    # Display progress messages
-    - name: Build Progress
-      run: |
-        for ((i=1; i<=100; i++)); do
-          echo "$i% complete"
-          # Add your build commands here
-          # For example:
-          npm run build
-          # sleep 1 # Optional: If you want to add a delay between each percentage update
-        done
     - run: npm test
