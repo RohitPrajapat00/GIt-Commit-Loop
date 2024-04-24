@@ -24,21 +24,18 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i 
-    # Display message indicating build start
-    - name: Start Build
-      run: echo "Build process started..."
+    # Start a background process to monitor build progress
+    - name: Monitor Build Progress
+      run: |
+        npm run build | while IFS= read -r line; do
+          if [[ $line =~ [0-9]+% ]]; then
+            echo "Build Progress: $line"
+          fi
+        done &
 
-    # Execute build command
+    # Execute the build command
     - run: npm run build
 
-    # Display progress messages
-    - name: Build Progress
-      run: |
-        for ((i=5; i<=100; i+=5)); do
-          echo "Build $i% Complete"
-          sleep 1 # Optional: If you want to add a delay between each percentage update
-        done
-
-    # Display message indicating build completion
+    # Show a message indicating build completion
     - name: Build Complete
       run: echo "Build process completed successfully!"
