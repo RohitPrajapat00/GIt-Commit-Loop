@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Node.js CI with Progress Monitoring
 
 on:
   push:
@@ -8,34 +8,34 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Install Dependencies
+        run: npm install --force
 
-    # Execute npm i 
-    - run: npm i --force
-    - name: Monitor Build Progress (Interactive)
-    - run: |  # Multi-line command with heredoc
-        total_steps=$(npm run build --silent | grep -o '\[[^]]*\]' | wc -l)
-        step_count=0
-        while read -r line; do
-          if [[ $line =~ \[[^]]*\] ]]; then
-            step_count=$((step_count + 1))
-            percentage=$((100 * step_count / total_steps))
-            echo "**Build Progress: ${percentage}% (${step_count}/${total_steps} steps)**"
-          fi
-        done < <(npm run build)
-      shell: bash  # Explicitly specify shell for reliability
-    - run: npm test
+      # Enhanced Build Progress Monitoring
+      - name: Monitor Build Progress (Interactive)
+        run: |  # Multi-line command with heredoc
+          total_steps=$(npm run build --silent | grep -o '\[[^]]*\]' | wc -l)
+          step_count=0
+          while read -r line; do
+            if [[ $line =~ \[[^]]*\] ]]; then
+              step_count=$((step_count + 1))
+              percentage=$((100 * step_count / total_steps))
+              echo "**Build Progress: ${percentage}% (${step_count}/${total_steps} steps)**"
+            fi
+          done < <(npm run build)
+        shell: bash  # Explicitly specify shell for reliability
+
+      - name: Run Tests
+        run: npm test
+
