@@ -6,24 +6,38 @@ on:
   pull_request:
     branches: [ "main" ]
 
-
 jobs:
   build:
-    runs-on: ubuntu-latest  # Replace with your desired runner OS
-    steps:
-      - uses: actions/checkout@v3  # Checkout your code from the repository
 
-      # Build your project
-      - name: Run Build Script
-        run: npm run build
+    runs-on: ubuntu-latest
 
-  # Monitor build progress (run concurrently with build)
-  monitor:
-    runs-on: ubuntu-latest  # Replace with your desired runner OS (can be the same)
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
     steps:
-      - uses: actions/checkout@v3  # Checkout your code from the repository
-      - name: Monitor Build Logs
-        run: |  # Multi-line command using a heredoc
-          tail -f <path/to/build/logs>  # Replace with your build log file path
-          # Optionally, add other commands to analyze or format the logs
-        # This step runs continuously, showing build progress in real-time
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    # Display message indicating build start
+    - name: Start Build
+      run: echo "Build process started..."
+
+    # Execute build command
+    - run: npm run build
+
+    # Display progress messages
+    - name: Build Progress
+      run: |
+        for ((i=5; i<=100; i+=5)); do
+          echo "Build $i% Complete"
+          sleep 1 # Optional: If you want to add a delay between each percentage update
+        done
+    # Display message indicating build completion
+    - name: Build Complete
+      run: echo "Build process completed successfully!"
