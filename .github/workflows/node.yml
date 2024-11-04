@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: '* * * * *'  # Runs every minute
 
+  push:
+    branches:
+      - dev
+
 permissions:
   contents: write
 
