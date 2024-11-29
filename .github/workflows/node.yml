@@ -6,7 +6,7 @@ on:
 
   push:
     branches:
-      - dev
+      - srgddg
 
 permissions:
   contents: write
