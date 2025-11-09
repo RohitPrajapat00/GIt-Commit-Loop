@@ -1,34 +1,34 @@
-name: Commit Date and Time
+# name: Commit Date and Time
 
-on:
-  schedule:
-    - cron: '* * * * *'  # Runs every minute
+# on:
+#   schedule:
+#     - cron: '* * * * *'  # Runs every minute
 
-  push:
-    branches:
-      - main
+#   push:
+#     branches:
+#       - main
 
-permissions:
-  contents: write
+# permissions:
+#   contents: write
 
-jobs:
-  commit-logs:
-    runs-on: ubuntu-latest
+# jobs:
+#   commit-logs:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
 
-      - name: Add current date and time to logs.txt
-        run: |
-          echo "Date and Time: $(date)" >> logs.txt
+#       - name: Add current date and time to logs.txt
+#         run: |
+#           echo "Date and Time: $(date)" >> logs.txt
 
-      - name: Commit changes
-        run: |
-          git config --local user.email "rohit.prajapat@appicsoftwares.in"
-          git config --local user.name "RohitPrajapat08"
-          git add logs.txt
-          git commit -m "Updated logs.txt with current date and time" || echo "No changes to commit"
+#       - name: Commit changes
+#         run: |
+#           git config --local user.email "rohit.prajapat@appicsoftwares.in"
+#           git config --local user.name "RohitPrajapat08"
+#           git add logs.txt
+#           git commit -m "Updated logs.txt with current date and time" || echo "No changes to commit"
 
-      - name: Push changes
-        run: git push origin main  # Replace 'main' with your branch name
+#       - name: Push changes
+#         run: git push origin main  # Replace 'main' with your branch name
